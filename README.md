@@ -152,3 +152,35 @@ que sao os
 
 1:14:22 instalar yarn add cors 
     para permitir o acesso do react ao backend
+
+# REACT
+
+1. yarn create react-app nomeDoAPP
+
+2. O react coloca o todo o app dentro da <div id='root'></div> que fica no arquivo public/index.html. 
+3. Tirar o serviceworker do src/index.js
+    ```js
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import './index.css';
+    import App from './App';
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+    ```
+
+4. Colocar estilizacoes globais dentro de App.css
+
+5. 31:19 lib para gerenciar rotas do react `yarn add react-router-dom`
+6. crie um routes.js dentro da /src
+7. os components/telas que ficam em routes.js, receberão uma prop history, que é utilizada para fazer navegacao 
+    ```js
+    export default function Login( { history } ) {
+        ....
+    }
+    ```
+8. Depois para navegar é só dar um `history.push('/main');`
+
+## Requisicoes
+1.  Instalar `yarn add axios`
+2.  cria a pasta src/services/api.js
+   
