@@ -183,4 +183,13 @@ que sao os
 ## Requisicoes
 1.  Instalar `yarn add axios`
 2.  cria a pasta src/services/api.js
+
+# Mobile
+
+1. instalar `yarn add react-navigation react-native-gesture-handler react-native-reanimated`
+2. instalar o `yarn add axios`
+3. Pra conectar o axios do RN com o backend é necessário dar `adb reverse tcp:3333 tcp:3333` , isso pra continuar usando o localhost:3333 dentro do services/api.js
+4. se não utilizar esse adb reverse, dentro do services/api.js trocar o localhost pelo ip local da maquina. (192.16.....)
+5. `yarn add @react-native-community/async-storage`
+
    
