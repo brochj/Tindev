@@ -6,6 +6,7 @@ import { SafeAreaView, View, Platform, Image, TextInput, StyleSheet, TouchableOp
 import logo from '../assets/logo.png';
 import likeIMG from '../assets/like.png';
 import dislikeIMG from '../assets/dislike.png';
+import itsamatch from '../assets/itsamatch.png';
 
 import api from '../services/api';
 
@@ -96,11 +97,17 @@ export default function Main({ navigation }) {
                 </View>
             )}
 
-                {matchDev && (
-                    <View >
-                        
-                    </View>
-                )}
+            {matchDev && (
+                <View style={styles.matchContainer} >
+                    <Image style={styles.matchImg} source={itsamatch} />
+                    <Image style={styles.matchAvatar} source={{ uri: matchDev.avatar }} />
+                    <Text style={styles.matchName}>{matchDev.name}</Text>
+                    <Text style={styles.matchBio}>{matchDev.bio}</Text>
+                    <TouchableOpacity onPress={() => { setMatchDev(false) }} style={styles.txtName}>
+                        <Text style={styles.closeMatch}>FECHAR</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
 
         </SafeAreaView>
     );
@@ -180,5 +187,47 @@ const styles = StyleSheet.create({
         color: '#999',
         fontSize: 24,
         fontWeight: 'bold'
+    },
+    matchContainer:{
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 99,
+
+
+    },
+    matchImg:{
+        height: 60,
+        resizeMode: 'contain',
+    },
+    matchAvatar:{
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        borderWidth: 5,
+        borderColor: '#fff',
+    },
+    matchName:{
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#fff'
+    },
+    matchBio:{
+        marginTop: 10,
+          fontSize: 16,
+          color: 'rgba(255,255,255,0.8)',
+          textAlign: 'center',
+          lineHeight: 24,
+          paddingHorizontal: 30,
+
+    },
+    closeMatch:{
+        fontSize: 16,
+        color: 'rgba(255,255,255,0.8)',
+          textAlign: 'center',
+          marginTop: 30,
+          fontWeight: 'bold'
+        
     },
 });
