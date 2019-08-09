@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView, View, Platform, Image, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
@@ -11,6 +12,7 @@ import api from '../services/api';
 export default function Main({ navigation }) {
     const id = navigation.getParam('user');
     const [users, setUsers] = useState([]);
+    const [matchDev, setMatchDev] = useState(null);
 
     useEffect(() => {
         async function loadUsers() {
@@ -25,6 +27,17 @@ export default function Main({ navigation }) {
 
         loadUsers();
     }, [id]);
+
+    // Conectar backend atraves do socket
+    useEffect(() => {
+        const socket = io('http://localhost:3333', {
+            query: { user: id }
+        });
+
+        socket.on('match', dev => {
+            setMatchDev(dev);
+        });
+    }, [id])
 
     async function handleLike() {
         const [user, ...rest] = users;
@@ -71,17 +84,24 @@ export default function Main({ navigation }) {
                     )}
 
             </View>
-            {users.length >0 &&(
+            {users.length > 0 && (
                 <View style={styles.buttons}>
-                <TouchableOpacity style={styles.button} onPress={handleDislike}>
-                    <Image source={dislikeIMG} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleLike}>
-                    <Image source={likeIMG} />
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handleDislike}>
+                        <Image source={dislikeIMG} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handleLike}>
+                        <Image source={likeIMG} />
+                    </TouchableOpacity>
 
-            </View>
+                </View>
             )}
+
+                {matchDev && (
+                    <View >
+                        
+                    </View>
+                )}
+
         </SafeAreaView>
     );
 

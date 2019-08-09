@@ -192,4 +192,27 @@ que sao os
 4. se não utilizar esse adb reverse, dentro do services/api.js trocar o localhost pelo ip local da maquina. (192.16.....)
 5. `yarn add @react-native-community/async-storage`
 
+# Extras
+
+## Na pasta do backend
+
+1. instalar` yarn add socket.io`
+
+2. importar no server.js
+   1. `const io = require('socket.io);`
+
+3. `yarn dev`
+
+## Na pasta do frontend
+
+1. instala `yarn add socket.io-client`
    
+2. `yarn start`
+
+14:14 ok
+18:45 ok
+22:12 ok
+
+## Na pasta do mobile
+
+1. instala `yarn add socket.io-client`
