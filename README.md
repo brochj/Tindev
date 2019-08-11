@@ -130,15 +130,76 @@
 
 ### Refatorando a estrututa
 
-27:00 config mongodb atlas
+## Configurando MongoDB Atlas
 
-31:30 instalando mongoose
+1. Ir para o [site](https://www.mongodb.com/cloud/atlas) e criar uma conta em try free
+2. Depois de logado, crie um novo Cluster, não precisa alterar nenhuma configuração 
+   > Isso pode demorar de +5 min.
+3. No menu lateral ir **Security** -> *Database Access*.
+   - Clicar em add new user.
+   - Digitar um usuario e senha.
+   - Selecionar **Read and write to any database**.
+   - Clicar em **Add User**.
+  
+4. No menu lateral ir **Security** -> *Network Access*.
+    - Clicar em **+ add ip adress**.
+    - Selecione **Allow access from anywhere**.
+    - Confirm.
+    > Isso pode demorar.
+
+5. No menu lateral ir **Atlas** -> *Clusters*
+   - Clique em **Connect**.
+   - No Modal que abrir clie em **Connect you Application**
+   - No **Driver** selecionar o `nodejs` e a **version** pode ser a mais atual
+   - Copie a url
+    ```
+        mongodb+srv://<username>:<password>@cluster0-atau3.mongodb.net/test?retryWrites=true&w=majority
+    ```
+OBS: se estiver conectado em alguma rede que possui um proxy para bloquear qualquer tipo de acesso à rede externa não vai funcionar.
+
+## Configurando o mongoose
+
+1. Para instalar de um  `yarn add mongoose`
+   >Ele serve para que evite-se usar a sitaxe do banco de dados, com ele podemos utilizar apenas javascript para se comunicar com o banco. Ele é basicamente um transpilador
+
+    - **Sem mongoose**: `"INSERT INTO tabela VALUES ()"`
+    - **Com mongoose**: `user.insert({})` 
+    
+2. Importar o mongoose **antes** das rotas no arquivo `server.js`.
+    ```js
+    const mongoose = require('mongoose'); 
+    const routes = require('./routes');
+    ```
+3. E conectá-lo, também **antes** das rotas.
+   ```js
+    // conexao com o banco de dados
+    mongoose.connect('mongodb+srv://<username>:<password>@cluster0-atau3.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
+   ```
+   - Trocar `<username>` e `<passoword>` por aqueles que foram definidos na config do mongoDB Atlas.
+   - Trocar o /**test**? pelo nome que se deseja dar ao banco de dados.
+   - Deve ficar algo assim
+    ```
+    mongodb+srv://brochj:1234@cluster0-atau3.mongodb.net/omnistack8?retryWrites=true&w=majority
+    ```
+
 
 40:40 rotas chama controllers e formulam uma respostas
 
-45:00 instala o axios, para requisicoes em Api externas
+45:00 instala o axios, para requisicoes em Api externas, requisicoes feitas no DevController
 
-51:15 mongodb compass community
+
+## Configurando o MongoDB Compass Community
+>Com ele podemos alterar, adicionar,deletar, etc; os dados do banco, fora que é melhor de visualizar os dados.
+
+1. Baixar instalar o [mongoDB Compass Community](https://www.mongodb.com/download-center/compass)
+2. Deixar ele aberto.
+3. Vai no [mongoDB Atlas](https://cloud.mongodb.com/user#/atlas/login), dentro do cluster criado e clica em **CONNECT**.
+4. Depois Seleciona **Connect with MongoDB Compass** e clica em *fetch via URL* ou *copia a Url* fornecida.
+5. Quando voltar ao MongoDB Compass, já vai ter um aviso que foi detectado uma URL de conexão, só aceitar.
+6. Colocar o *username* e *password* que foram definidos no mongoDB Atlas.
+7. No *Authentication Database* colocar `admin`.
+8. Clicar em **CONNECT**
+
 
 53:50 um controller n~ao deve ter mais que o 5 metodos fundamentais
 que sao os 
@@ -269,6 +330,15 @@ que sao os
     }
     ```
 6.  Depois para navegar é só dar um `history.push('/main');`
+
+#### Outra forma de navegar
+1. `import { Link } from 'react-router-dom';`
+2. e dentro do render dá para utilizar da seguinte maneira
+   ```jsx
+    <Link to="/"> {/** voltando pra tela inicial */}
+        <img src={logo} alt="Tindev" />
+    </Link>
+   ```
 
 ## Requisicoes
 1.  Instalar `yarn add axios`

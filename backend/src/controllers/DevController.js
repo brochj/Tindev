@@ -39,6 +39,6 @@ module.exports = {
             avatar
         });
 
-        return res.json(dev);
+        return res.json(dev); // Esse retorno é das infos que estao dentro do nosso banco de dados
     }
 };
