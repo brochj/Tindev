@@ -154,35 +154,137 @@ que sao os
     para permitir o acesso do react ao backend
 
 # REACT
+## Criando o projeto do react
+1. Na pasta onde deseja criar o projeto
+  ```sh
+    yarn create react-app nomeDoAPP
+  ```  
+  ou `npx create react-app nomeDoAPP`
 
-1. yarn create react-app nomeDoAPP
+   - Utilizando esse comando, o projeto ja vem o babel e webpack e outros pre configurados
+  
 
-2. O react coloca o todo o app dentro da <div id='root'></div> que fica no arquivo public/index.html. 
-3. Tirar o serviceworker do src/index.js
-    ```js
-    import React from 'react';
-    import ReactDOM from 'react-dom';
-    import './index.css';
-    import App from './App';
+2. Na pasta do projeto iniciar o projeto com `yarn start`
+    > Vai abrir uma aba no navegador em `http://localhost:3000`
 
-    ReactDOM.render(<App />, document.getElementById('root'));
+## Entendendo a estrutura
+
+1. Na pasta `/public`
+    - `index.html` : esse será o arquivo que será mandado para o navegador via javascript, e todo o código feito em react será colocado/embutido dentro da `<div id="root"> </div>`. Toda a aplicacão é gerada pelo javascript e não pelo html.  
+
+    O react procura pela por aquela `<div>` com `id="root"`, então é importante não mudá-la.  
+
+    A tag `<meta name="theme-color">` é a cor que vai ficar no header do navegador do android.  
+
+    - `manifest.json` é responsável para geração/construção de PWA (Proressive Web Apps).  
+    - O código do react em si, fica dentro das inportações feita nas tags `<scripts>`.  
+  
+2. Na pasta `/src`. 
+    - O arquivo `index.js` é o arquivo de entrada da aplicação. Sempre que o react inicializar ele vai procurar por esse arquivo.
+
+      - Tirar o serviceworker do `src/index.js` irá ficar assim. (serviceworker é pra PWA)
+      ```js
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import './index.css';
+          import App from './App';
+
+          ReactDOM.render(<App />, document.getElementById('root'));
+      ```
+      - `import ReactDOM from 'react-dom'` serve para fazer a manipulação do elementos presentes na DOM.  
+      - `ReactDOM.render(<App />, document.getElementById('root'));` : Esse comando é pra renderizar a aplicação `<App />`  dentro do elemento que tiver o `id="root"`, que no caso é a `<div>` que fica em `public/index.html`.  
+      - OBS: `ReactDOM.render` em 99.99% dos casos é pra ser utilizado uma única vez dentro da aplicação. 
+
+    - `serviceWorker.js` é para a construção de PWAs
+
+## Começando a programar
+1. Colocar estilizacoes globais dentro de App.css
+    - Exemplo
+    ```css
+        * {
+        margin:0;
+        padding: 0;
+        outline: 0;
+        box-sizing: border-box;
+        }
+        html, body, #root {
+        height: 100%;
+        }
+        body {
+        background: #f5f5f5;
+        }
+        body, input, button {
+        font-family: Arial, Helvetica, sans-serif;
+        }
     ```
+### Instalando o gerenciador de rotas 
+1. Para gerenciar rotas do react `yarn add react-router-dom`   
+2. Crie um `routes.js` dentro da `/src`.  
+3. Dentro de `routes.js` deve ficar algo assim. Cada página da aplicação deve ter um route para ela.
+    ```js
+    import React from "react";
+    import { BrowserRouter, Route } from "react-router-dom";
 
-4. Colocar estilizacoes globais dentro de App.css
+    import Login from './pages/Login';
+    import Main from './pages/Main';
 
-5. 31:19 lib para gerenciar rotas do react `yarn add react-router-dom`
-6. crie um routes.js dentro da /src
-7. os components/telas que ficam em routes.js, receberão uma prop history, que é utilizada para fazer navegacao 
+    export default function Routes() {
+        return (
+            <BrowserRouter>
+                <Route path="/" exact component={Login} />
+                <Route path="/dev/:id" component={Main} />
+            </BrowserRouter>
+        );
+    }
+    ```  
+    - `<Route path="/" exact component={Login} />`  : Quando o usuário estiver na rota `"/"` o componente que será mostrado será o `Login`. A `exact` serve para o react mostrar a tela `Login` quando a requisição for feita em `"/"`, pois sem esse `exact`, o react não consegue acessar as rotas mais internas, pois todos os `paths=` começam com `/`. Sendo assim ele já retornaria o primeiro componente com `/`, que nesse caso é o `Login`.  
+  
+    - O `:id` é para criar uma parâmetro que será passado para dentro de `Main`, ou seja será acessível pela prop `match` mais especificamente em `match.params.id`. Exemplo:
+    - Rota acessada `http://localhost:3000/dev/3421234_id`
+    - Main.js
+        ```js
+        export default function Main({ match }) {
+            console.log(match.params.id)
+            // output:  3421234_id       
+        }
+        ```
+
+4. No `App.js` tem que mudar agora para `<Routes/>`, ficando algo assim.
+    ```js
+        (...)
+        import Routes from './routes'
+        function App() {
+            return (
+                <div className="App">
+                <Routes />
+                </div>
+            );
+        }
+        export default App;
+    ```
+5. Os components/telas que ficam em `routes.js`, receberão uma prop *history*, que é utilizada para fazer navegação 
     ```js
     export default function Login( { history } ) {
-        ....
+        (....)
     }
     ```
-8. Depois para navegar é só dar um `history.push('/main');`
+6.  Depois para navegar é só dar um `history.push('/main');`
 
 ## Requisicoes
 1.  Instalar `yarn add axios`
-2.  cria a pasta src/services/api.js
+2.  Cria uma pasta `src/services/` nela ficará todos os serviços que faz algum tipo de comunicaçao/conexao com um prestador de dados externo à nossa aplicaçao.
+3.  Cria um arquivo `api.js` em `src/services/api.js`
+    - O conteúdo de `api.js`  
+        ```js
+            import axios from "axios";
+            const api = axios.create({
+                // baseURL: 'http://192.168.16.100:3333' //Colocar o ip do computador
+                baseURL: 'http://localhost:3333' //tem que dat um adb reverse tcp:3333 tcp:3333
+            });
+            export default api;
+        ```
+    -  O `adb reverse tcp:3333 tcp:3333` serve para quando estiver rodando o react-native.
+
 
 # Mobile
 
